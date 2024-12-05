@@ -10,8 +10,8 @@ ShopifyApp.configure do |config|
 
   config.reauth_on_access_scope_changes = true
 
-  config.api_key = ENV.fetch('SHOPIFY_API_KEY', '').presence
-  config.secret = ENV.fetch('SHOPIFY_API_SECRET', '').presence
+  config.api_key = Rails.application.credentials.SHOPIFY_API_KEY
+  config.secret = Rails.application.credentials.SHOPIFY_API_SECRET
 
   # You may want to charge merchants for using your app. Setting the billing configuration will cause the Authenticated
   # controller concern to check that the session is for a merchant that has an active one-time payment or subscription.
@@ -38,13 +38,13 @@ Rails.application.config.after_initialize do
       api_key: ShopifyApp.configuration.api_key,
       api_secret_key: ShopifyApp.configuration.secret,
       api_version: ShopifyApp.configuration.api_version,
-      host_name: URI(ENV.fetch('HOST', '')).host || '',
+      host_name: URI(Rails.application.credentials.host || '').host || '',
       scope: ShopifyApp.configuration.scope,
-      is_private: !ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', '').empty?,
+      is_private: false,
       is_embedded: ShopifyApp.configuration.embedded_app,
       session_storage: ShopifyApp::SessionRepository,
       logger: Rails.logger,
-      private_shop: ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', nil),
+      private_shop: Rails.application.credentials.shopify_app_public_shop,
       user_agent_prefix: "ShopifyApp/#{ShopifyApp::VERSION}"
     )
 

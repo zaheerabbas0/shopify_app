@@ -22,8 +22,7 @@ default: &default
   host: localhost
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
+  pool: <%= Rails.application.credentials.rails_max_threads || 5 %>
 development:
   <<: *default
   database: shopify_app_development
@@ -86,4 +85,4 @@ production:
   <<: *default
   database: shopify_app_production
   username: shopify_app
-  password: <%= ENV["SHOPIFY_APP_DATABASE_PASSWORD"] %>
+  password: Rails.application.credentials.SHOPIFY_APP_DATABASE_PASSWORD
